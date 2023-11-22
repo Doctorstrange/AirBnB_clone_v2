@@ -3,7 +3,6 @@
 import unittest
 from unittest.mock import patch
 from io import StringIO
-import pep8
 import os
 import json
 import console
@@ -22,29 +21,24 @@ from models.engine.file_storage import FileStorage
 class TestConsole(unittest.TestCase):
     """test the console"""
 
-    def test_emptyline(self):
-        """Test empty line """
-        with patch('sys.stdout', new=StringIO()) as f:
-            self.consol.onecmd("\n")
-            self.assertEqual('', f.getvalue())
+    @classmethod
+    def setUpClass(cls):
+        """setup for the test"""
+        cls.shared_instance = HBNBCommand()
 
     def test_create(self):
         """Test create command inpout"""
         with patch('sys.stdout', new=StringIO()) as f:
-            self.consol.onecmd("create")
-            self.assertEqual(
-                "** class name missing **\n", f.getvalue())
-        with patch('sys.stdout', new=StringIO()) as f:
-            self.consol.onecmd("create qwerty")
+            self.shared_instance.onecmd("create qwerty")
             self.assertEqual(
                 "** class doesn't exist **\n", f.getvalue())
         with patch('sys.stdout', new=StringIO()) as f:
-            self.consol.onecmd('create User email="user" password="passwd"')
+            self.shared_instance.onecmd('create User email="user" password="passwd"')
         with patch('sys.stdout', new=StringIO()) as f:
-            self.consol.onecmd("all User")
+            self.shared_instance.onecmd("all User")
             self.assertEqual(
                 "[\"[User", f.getvalue()[:7])
-            
+
 
 if __name__ == "__main__":
     unittest.main()

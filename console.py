@@ -136,7 +136,6 @@ class HBNBCommand(cmd.Cmd):
             print("** class name missing **")
         except NameError as e:
             print("** class doesn't exist **")
-            ran_instance.save()
 
     def help_create(self):
         """ Help information for the create method """
