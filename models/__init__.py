@@ -12,10 +12,4 @@ if main_storage == "db":
 else:
     from models.engine.file_storage import FileStorage
     storage = FileStorage()
-storage.reload()#!/usr/bin/python3
-"""nstantiates an object of class FileStorage"""
-from models.engine.file_storage import FileStorage
-
-
-storage = FileStorage()
 storage.reload()
