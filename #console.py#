@@ -34,7 +34,6 @@ class HBNBCommand(cmd.Cmd):
         """Prints if isatty is false"""
         if not sys.__stdin__.isatty():
             print('(hbnb)')
-
     def precmd(self, line):
         """Reformat command line for advanced command syntax.
 
@@ -73,7 +72,7 @@ class HBNBCommand(cmd.Cmd):
                 pline = pline[2].strip()  # pline is now str
                 if pline:
                     # check for *args or **kwargs
-                    if pline[0] is '{' and pline[-1] is'}'\
+                    if pline[0] is '{' and pline[ - 1] is'}'\
                             and type(eval(pline)) is dict:
                         _args = pline
                     else:
@@ -136,6 +135,7 @@ class HBNBCommand(cmd.Cmd):
             print("** class name missing **")
         except NameError as e:
             print("** class doesn't exist **")
+            ran_instance.save()
 
     def help_create(self):
         """ Help information for the create method """
@@ -340,9 +340,9 @@ class HBNBCommand(cmd.Cmd):
         else:
             try:
                 try:
-                    return int(attribute)
+                    return int(value)
                 except ValueError:
-                    return float(attribute)
+                    return float(value)
             except ValueError:
                 return None
 
