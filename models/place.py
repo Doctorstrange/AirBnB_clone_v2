@@ -14,13 +14,14 @@ from sqlalchemy import Integer
 from sqlalchemy import String
 from sqlalchemy import Table
 
-join_table = Table("place_amenity", Base.metadata,
-                          Column("place_id", String(60),
-                                 ForeignKey("places.id"),
-                                 primary_key=True, nullable=False),
-                          Column("amenity_id", String(60),
-                                 ForeignKey("amenities.id"),
-                                 primary_key=True, nullable=False))
+join_table = Table(
+    "place_amenity",
+    Base.metadata,
+    Column("place_id", String(60), ForeignKey("places.id"),
+           primary_key=True, nullable=False),
+    Column("amenity_id", String(60), ForeignKey("amenities.id"),
+           primary_key=True, nullable=False),
+)
 
 
 class Place(BaseModel, Base):
@@ -42,8 +43,13 @@ class Place(BaseModel, Base):
 
     amenities = relationship("Amenity", secondary=join_table, viewonly=False)
 
-    def get_amenities(self):
-        return [Amenity.query.get(amenity_id) for amenity_id in self.amenity_ids]
+
+def get_amenities(self):
+    amenities = []
+    for amenity_id in self.amenity_ids:
+        amenity = Amenity.query.get(amenity_id)
+        amenities.append(amenity)
+    return amenities
 
     @property
     def amenities(self):
