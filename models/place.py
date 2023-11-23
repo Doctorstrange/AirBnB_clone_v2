@@ -14,6 +14,14 @@ from sqlalchemy import Integer
 from sqlalchemy import String
 from sqlalchemy import Table
 
+join_table = Table("place_amenity", Base.metadata,
+                          Column("place_id", String(60),
+                                 ForeignKey("places.id"),
+                                 primary_key=True, nullable=False),
+                          Column("amenity_id", String(60),
+                                 ForeignKey("amenities.id"),
+                                 primary_key=True, nullable=False))
+
 
 class Place(BaseModel, Base):
     """Represents a Place for a MySQL database"""
@@ -28,3 +36,23 @@ class Place(BaseModel, Base):
     price_by_night = Column(Integer, default=0)
     latitude = Column(Float)
     longitude = Column(Float)
+
+    amenities = relationship("Amenity", secondary=join_table, viewonly=False)
+
+    def get_amenities(self):
+        return [Amenity.query.get(amenity_id) for amenity_id in self.amenity_ids]
+
+    @property
+    def amenities(self):
+        return self.get_amenities()
+
+    @amenities.setter
+    def amenities(self, amenities):
+        if isinstance(amenities, Amenity):
+            if amenities.id not in self.amenity_ids:
+                self.amenity_ids.append(amenities.id)
+        else:
+            for amenity in amenities:
+                if isinstance(amenity, Amenity):
+                    if amenity.id not in self.amenity_ids:
+                        self.amenity_ids.append(amenity.id)
