@@ -14,12 +14,12 @@ from sqlalchemy import Integer
 from sqlalchemy import String
 from sqlalchemy import Table
 
-join_table = Table(
+place_amenity = Table(
     "place_amenity",
     Base.metadata,
-    Column("place_id", String(60), ForeignKey("places.id"),
+    Column("place_id", String(60), ForeignKey("places.id", ondelete='CASCADE', onupdate='CACADE'),
            primary_key=True, nullable=False),
-    Column("amenity_id", String(60), ForeignKey("amenities.id"),
+    Column("amenity_id", String(60), ForeignKey("amenities.id", ondelete='CASCADE', onupdate='CACADE'),
            primary_key=True, nullable=False),
 )
 
@@ -40,9 +40,6 @@ class Place(BaseModel, Base):
     reviews = relationship("Review", backref="place", cascade="delete")
     amenities = relationship("Amenity", secondary="place_amenity",
                              viewonly=False)
-
-    amenities = relationship("Amenity", secondary=join_table, viewonly=False)
-
 
 def get_amenities(self):
     amenities = []
