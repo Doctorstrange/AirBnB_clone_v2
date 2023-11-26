@@ -14,16 +14,6 @@ from sqlalchemy import Integer
 from sqlalchemy import String
 from sqlalchemy import Table
 
-place_amenity = Table(
-    "place_amenity",
-    Base.metadata,
-    Column("place_id", String(60), ForeignKey("places.id", ondelete='CASCADE', onupdate='CACADE'),
-           primary_key=True, nullable=False),
-    Column("amenity_id", String(60), ForeignKey("amenities.id", ondelete='CASCADE', onupdate='CACADE'),
-           primary_key=True, nullable=False),
-)
-
-
 class Place(BaseModel, Base):
     """Represents a Place for a MySQL database"""
     __tablename__ = "places"
@@ -39,21 +29,24 @@ class Place(BaseModel, Base):
     longitude = Column(Float)
     reviews = relationship("Review", backref="place", cascade="delete")
     amenities = relationship("Amenity", secondary="place_amenity",
-                             viewonly=False, backref="state")
+                             viewonly=False, backref="places")
 
-def get_amenities(self):
-    amenities = []
-    for amenity_id in self.amenity_ids:
-        amenity = Amenity.query.get(amenity_id)
-        amenities.append(amenity)
-    return amenities
+    def get_amenities(self):
+        """Get amenities related to the place."""
+        amenities = []
+        for amenity_id in self.amenity_ids:
+            amenity = Amenity.query.get(amenity_id)
+            amenities.append(amenity)
+        return amenities
 
     @property
-    def amenities(self):
+    def amenities_list(self):
+        """Property method to retrieve amenities."""
         return self.get_amenities()
 
-    @amenities.setter
-    def amenities(self, amenities):
+    @amenities_list.setter
+    def amenities_list(self, amenities):
+        """Property method to set amenities."""
         if isinstance(amenities, Amenity):
             if amenities.id not in self.amenity_ids:
                 self.amenity_ids.append(amenities.id)
