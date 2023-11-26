@@ -5,16 +5,14 @@ from models.base_model import BaseModel
 from sqlalchemy import Column
 from sqlalchemy import String
 from sqlalchemy.orm import relationship
-
+from sqlalchemy import ForeignKey
 
 class Amenity(BaseModel, Base):
     """Represents an Amenity for a MySQL database"""
     __tablename__ = "amenities"
     name = Column(String(128), nullable=False)
-    place_amenities = relationship(
+    place_id = Column(String(255), ForeignKey('places.id'), nullable=False)
+    related_places = relationship(
         "Place",
-        secondary="place_amenity",
-        backref="amenities",
-        foreign_keys="[place_amenity.c.amenity_id]"
+        back_populates="associated_amenities",
     )
-

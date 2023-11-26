@@ -17,9 +17,9 @@ from sqlalchemy import Table
 place_amenity = Table(
     "place_amenity",
     Base.metadata,
-    Column("place_id", String(60), ForeignKey("places.id", ondelete='CASCADE', onupdate='CACADE'),
+    Column("place_id", String(60), ForeignKey("places.id", ondelete='CASCADE', onupdate='CASCADE'),
            primary_key=True, nullable=False),
-    Column("amenity_id", String(60), ForeignKey("amenities.id", ondelete='CASCADE', onupdate='CACADE'),
+    Column("amenity_id", String(60), ForeignKey("amenities.id", ondelete='CASCADE', onupdate='CASCADE'),
            primary_key=True, nullable=False),
 )
 
@@ -37,34 +37,25 @@ class Place(BaseModel, Base):
     latitude = Column(Float)
     longitude = Column(Float)
     reviews = relationship("Review", backref="place", cascade="delete")
-    amenities = relationship(
+    associated_amenities = relationship(
         "Amenity",
-        secondary="place_amenity",
-        backref="places",
-        foreign_keys="[place_amenity.c.place_id]"
+        secondary=place_amenity,
+        back_populates="related_places",
     )
-
-    def get_amenities(self):
-        """Get amenities related to the place."""
-        amenities = []
-        for amenity_id in self.amenity_ids:
-            amenity = Amenity.query.get(amenity_id)
-            amenities.append(amenity)
-        return amenities
 
     @property
     def amenities_list(self):
         """Property method to retrieve amenities."""
-        return self.get_amenities()
+        return [amenity.name for amenity in self.associated_amenities]
 
     @amenities_list.setter
     def amenities_list(self, amenities):
         """Property method to set amenities."""
         if isinstance(amenities, Amenity):
-            if amenities.id not in self.amenity_ids:
-                self.amenity_ids.append(amenities.id)
+            if amenities not in self.associated_amenities:
+                self.associated_amenities.append(amenities)
         else:
             for amenity in amenities:
                 if isinstance(amenity, Amenity):
-                    if amenity.id not in self.amenity_ids:
-                        self.amenity_ids.append(amenity.id)
+                    if amenity not in self.associated_amenities:
+                        self.associated_amenities.append(amenity)
