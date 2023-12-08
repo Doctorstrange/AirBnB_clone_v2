@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/python3
 """creates and distributes an archive to your web servers"""
 
 from fabric.api import env, local, put, run
