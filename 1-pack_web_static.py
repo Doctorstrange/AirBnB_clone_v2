@@ -18,4 +18,3 @@ def do_pack():
         return archive_name
     else:
         return None
-    
