@@ -25,7 +25,7 @@ def cplace(text):
 
 
 @app.route('/python/<text>', strict_slashes=False)
-def cplace(text='is cool'):
+def piithon(text='is cool'):
     """display “Python ”, followed by the value of the text variable """
     return 'Python ' + text.replace('_', ' ')
 
