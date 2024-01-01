@@ -31,10 +31,11 @@ def piithon(text='is cool'):
     return 'Python ' + text.replace('_', ' ')
 
 
-@app.route('/number/<int:n>', strict_slashes=False)
+@app.route('/number/<n>', strict_slashes=False)
 def numbers(n):
     """display “C ” followed by the value of the text"""
-    return "{:d} is a number".format(n)
+    if isinstance(n, int):
+        return "{:d} is a number".format(n)
 
 
 if __name__ == "__main__":
