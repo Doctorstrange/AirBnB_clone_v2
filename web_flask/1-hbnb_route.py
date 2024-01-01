@@ -15,7 +15,7 @@ def hello():
 @app.route('/hbnb', strict_slashes=False)
 def hbnb():
     """web application must be listening on 0.0.0.0, port 5000"""
-    return ("Hello HBNB!")
+    return ("HBNB")
 
 
 if __name__ == "__main__":
